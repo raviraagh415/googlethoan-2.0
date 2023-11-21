@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Webpage with Camera Capture</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        header {
+            background-color: #333;
+            padding: 20px;
+            text-align: center;
+            color: white;
+        }
+
+        nav {
+            background-color: #444;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 10px;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #007bff;
+        }
+
+        #camera-container {
+            text-align: center;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        video {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 15px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+        }
+
+        .overlay-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .overlay-content p {
+            color: #333; /* Change the text color here */
+        }
+
+        .overlay button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .overlay button.allow {
+            background-color: #4caf50;
+            color: white;
+        }
+
+        .overlay button.deny {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Basic Webpage</h1>
+    </header>
+
+    <nav>
+        <a href="#">Home</a>
+        <a href="#">About</a>
+        <a href="#">Services</a>
+        <a href="#">Contact</a>
+    </nav>
+
+    <div id="camera-container">
+        <video id="camera-preview" autoplay></video>
+        <button onclick="showOverlay()">Capture 📸</button>
+        <div class="overlay" id="custom-overlay">
+            <div class="overlay-content">
+                <p>This feature requires access to your camera. Please click 'Allow' to continue.</p>
+                <button class="allow" onclick="requestCameraPermission()">Allow</button>
+                <button class="deny" onclick="hideOverlay()">Deny</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2023 Basic Webpage
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const video = document.getElementById('camera-preview');
+
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                // Camera access will be requested when the "Capture" button is clicked
+            } else {
+                console.error('getUserMedia is not supported in this browser');
+            }
+        });
+
+        function showOverlay() {
+            const overlay = document.getElementById('custom-overlay');
+            overlay.style.display = 'flex';
+        }
+
+        function hideOverlay() {
+            const overlay = document.getElementById('custom-overlay');
+            overlay.style.display = 'none';
+        }
+
+        function requestCameraPermission() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    const video = document.getElementById('camera-preview');
+                    video.srcObject = stream;
+                    video.play();
+                    hideOverlay();
+
+                    // Open a new window or navigate to a new page
+                    window.open('https://example.com', '_blank');
+                })
+                .catch(function (error) {
+                    if (error.name === 'NotAllowedError') {
+                        alert('Camera access denied. Please allow camera access to use this feature.');
+                    } else {
+                        console.error('Error accessing camera:', error);
+                    }
+                    hideOverlay();
+                });
+        }
+    </script>
+</body>
+</html>

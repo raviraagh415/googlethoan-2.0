@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        
+    </style>
+  <title>Income Tax Calculator</title>
+  <script>
+    function calculateIncomeTax() {
+      const income = parseFloat(document.getElementById('income').value);
+      const slab1 = 250000;  // First slab upper limit
+      const slab2 = 500000;  // Second slab upper limit
+      const slab3 = 1000000; // Third slab upper limit
+      let tax = 0;
+
+      if (income <= slab1) {
+        tax = 0;
+      } else if (income > slab1 && income <= slab2) {
+        tax = (income - slab1) * 0.05;
+      } else if (income > slab2 && income <= slab3) {
+        tax = ((income - slab2) * 0.2) + ((slab2 - slab1) * 0.05);
+      } else {
+        tax = ((income - slab3) * 0.3) + ((slab3 - slab2) * 0.2) + ((slab2 - slab1) * 0.05);
+      }
+
+      // Calculate cess (4% health and education cess)
+      const cess = tax * 0.04;
+
+      // Add cess to the tax amount
+      const totalTax = tax + cess;
+
+      document.getElementById('result').innerHTML = `For an income of ₹${income}, the total tax amount is ₹${totalTax.toFixed(2)}`;
+    }
+  </script>
+</head>
+<body>
+  <h2>Income Tax Calculator</h2>
+  <label for="income">Enter your income:</label>
+  <input type="number" id="income" placeholder="Enter income amount"><br><br>
+  <button onclick="calculateIncomeTax()">Calculate Tax</button><br><br>
+  <p id="result"></p>
+</body>
+</html>
